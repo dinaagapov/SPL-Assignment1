@@ -22,11 +22,11 @@ public:
     void closeTrainer();
     int getSalary();
     bool isOpen();
+    int id;
 private:
     int capacity;
     bool open;
     int salary;
-    int id;
     std::vector<Customer*> customersList;
     std::vector<OrderPair> orderList; //A list of pairs for each order for the trainer - (customer_id, Workout)
 };

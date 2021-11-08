@@ -47,18 +47,16 @@ void Studio::start()
 
 int Studio::getNumOfTrainers() const
 {
-	return trainers.size();
+	return trainers.size(); // fix
 }
 
 Trainer* Studio::getTrainer(int tid)
 {
-	Trainer* tr = nullptr;
-	bool found = false;
-	for(int i = 0 ; i < trainers.size() && !found; i++)
+	auto iter = trainers.begin();
+	for (; iter != trainers.end(); iter++)
 	{
-		 tr = (trainers)[i];
-		 
-
+		if ((*iter)->id == tid)
+			return *iter;
 	}
 }
 const std::vector<BaseAction*>& Studio::getActionsLog() const

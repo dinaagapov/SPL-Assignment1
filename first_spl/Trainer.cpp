@@ -22,7 +22,7 @@ void Trainer::removeCustomer(int id)
 	for (; iter != customersList.end(); iter++)
 	{
 		if ((*iter)->getId() == id)
-			customersList.pop_back(*iter);
+			customersList.pop_back(*iter); // fix
 			delete *iter;
 	}
 }
