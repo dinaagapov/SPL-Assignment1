@@ -1,5 +1,7 @@
 #include "Action.h"
 
+
+
 BaseAction::BaseAction()
 {
 }
@@ -11,23 +13,30 @@ ActionStatus BaseAction::getStatus() const
 
 void BaseAction::complete()
 {
+	status = COMPLETED;
 }
 
 void BaseAction::error(std::string errorMsg)
 {
+	errorMsg = errorMsg;
+	status = ERROR;
+	std::cout <<"Error:"<< errorMsg << std::endl;
 }
 
 std::string BaseAction::getErrorMsg() const
 {
-	return std::string();
+	return errorMsg;
 }
 
-OpenTrainer::OpenTrainer(int id, std::vector<Customer*>& customersList)
+OpenTrainer::OpenTrainer(int id, std::vector<Customer*>& customersList):trainerId(id)
 {
+	
+
 }
 
 void OpenTrainer::act(Studio& studio)
 {
+	
 }
 
 std::string OpenTrainer::toString() const
@@ -37,7 +46,6 @@ std::string OpenTrainer::toString() const
 
 Order::Order(int id)
 {
-	return new Order();
 }
 
 void Order::act(Studio& studio)

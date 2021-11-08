@@ -5,6 +5,8 @@
 #include <iostream>
 #include "Customer.h"
 #include <vector>
+#include "Studio.h"
+#include "Trainer.h"
 
 enum ActionStatus {
     COMPLETED, ERROR

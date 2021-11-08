@@ -1,19 +1,47 @@
 #include "Studio.h"
+#include <fstream>
 
-Studio::Studio()
+Studio::Studio() :open(false)
 {
+	
 }
 
-Studio::Studio(const std::string& configFilePath)
+Studio::Studio(const std::string& configFilePath):open(false)
 {
-
 }
 
 
 void Studio::start()
 {
 
-	std::cout << "Studio is now open" << std::endl;
+	std::fstream newfile;
+	newfile.open("ExmapleInput.txt", std::ios::out);
+	if (newfile.is_open()) {   //checking whether the file is open
+		std::string tp;
+		open = true;
+		std::cout << "Studio is now open" << std::endl;
+		while (getline(newfile, tp))
+		{
+			if (tp == "# Number of trainers") {
+				getline(newfile, tp);
+				///
+
+			}
+			if (tp == "# Traines") {
+				getline(newfile, tp);
+
+				///
+
+			}
+			if (tp == "# Work Options") {
+				getline(newfile, tp);
+				///
+
+			}
+		}
+		open = false;
+		newfile.close();
+	}
 }
 
 

@@ -3,7 +3,7 @@
 
 #include <string>
 
-enum WorkoutType {
+enum  WorkoutType {
     ANAEROBIC, MIXED, CARDIO
 };
 

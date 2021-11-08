@@ -1,7 +1,9 @@
 #include "Trainer.h"
 
-Trainer::Trainer(int t_capacity):capacity(t_capacity)
+Trainer::Trainer(int t_capacity) :capacity(t_capacity), open(false)
 {
+	idAll = 0;
+	idAll++;
 }
 
 
