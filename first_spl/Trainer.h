@@ -12,7 +12,6 @@ public:
     
     Trainer(int t_capacity);
     int getCapacity() const;
-    static int idAll = 0;
     void addCustomer(Customer* customer);
     void removeCustomer(int id);
     Customer* getCustomer(int id);
