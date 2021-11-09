@@ -1,5 +1,7 @@
 #include "Studio.h"
 #include <fstream>
+#include <sstream>
+using namespace std;
 
 Studio::Studio() :open(false)
 {
@@ -8,40 +10,97 @@ Studio::Studio() :open(false)
 
 Studio::Studio(const std::string& configFilePath):open(false)
 {
+	std::fstream newfile;
+	newfile.open(configFilePath, std::ios::out);
+	if (newfile.is_open()) {   //checking whether the file is open
+		std::string tp;
+
+		while (getline(newfile, tp))
+		{
+			if (tp == "# Number of trainers") 
+			{
+				getline(newfile, tp);
+				int numbersOfTrainers = stoi(tp);
+
+			}
+			if (tp == "# Traines")
+			{
+				std::vector<int> vect;
+
+				std::stringstream ss(tp);
+
+				for (int i; ss >> i;)
+				{
+					vect.push_back(i);
+					if (ss.peek() == ',')
+						ss.ignore();
+				}
+
+				for (std::size_t i = 0; i < vect.size(); i++)
+				{
+					Trainer* tr = new Trainer(vect[i]);
+					trainers.push_back(tr);
+				}
+				
+			}
+			if (tp == "# Work Options")
+			{
+				getline(newfile, tp);
+				/// missing
+				
+			}
+		}
+		newfile.close();
+	}
 }
 
 
 void Studio::start()
 {
-
-	std::fstream newfile;
-	newfile.open("ExmapleInput.txt", std::ios::out);
-	if (newfile.is_open()) {   //checking whether the file is open
-		std::string tp;
-		open = true;
-		std::cout << "Studio is now open" << std::endl;
-		while (getline(newfile, tp))
+	string input = "";
+	open = true;
+	std::cout << "Studio is now open" << std::endl;
+	while (input != "closeAll")
+	{
+		// missing *arguments* for the constructors and the *act function *
+		if (input == "open triner")
 		{
-			if (tp == "# Number of trainers") {
-				getline(newfile, tp);
-				///
-
-			}
-			if (tp == "# Traines") {
-				getline(newfile, tp);
-
-				///
-
-			}
-			if (tp == "# Work Options") {
-				getline(newfile, tp);
-				///
-
-			}
+			OpenTrainer* openTrainer = new OpenTrainer();
+			openTrainer->act(*this);
 		}
-		open = false;
-		newfile.close();
+
+		else if (input == "order") 
+		{
+			Order* order = new Order();
+			order->act(*this);
+		}
+
+		else if (input == "move customer") 
+		{
+			MoveCustomer* moveCustomer = new MoveCustomer();
+			moveCustomer->act(*this);
+		}
+
+		else if (input == "close")
+		{
+			Close* close = new Close();
+			close->act(*this);
+		}
+		else if (input == "print Trainer Status") 
+		{
+			PrintTrainerStatus* printTrainerStatus = new PrintTrainerStatus();
+			printTrainerStatus->act(*this);
+		}
+
+		else if (input == "print workout options")
+		{
+			PrintWorkoutOptions* printWorkOutOptions = new PrintWorkoutOptions();
+			printWorkOutOptions->act(*this);
+		}
+
 	}
+	CloseAll();
+	open = false;
 }
 
 
@@ -66,5 +125,6 @@ const std::vector<BaseAction*>& Studio::getActionsLog() const
 
 std::vector<Workout>& Studio::getWorkoutOptions()
 {
-	// TODO: insert return statement here
+	return workout_options;
+
 }

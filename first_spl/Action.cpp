@@ -30,12 +30,13 @@ std::string BaseAction::getErrorMsg() const
 
 OpenTrainer::OpenTrainer(int id, std::vector<Customer*>& customersList):trainerId(id)
 {
-	
+
 }
 
 void OpenTrainer::act(Studio& studio)
 {
 	
+		
 }
 
 std::string OpenTrainer::toString() const
@@ -101,6 +102,9 @@ PrintWorkoutOptions::PrintWorkoutOptions()
 
 void PrintWorkoutOptions::act(Studio& studio)
 {
+	std::vector<Workout> workouts = studio.getWorkoutOptions();
+	for (int i = 0; i < workouts.size(); i++)
+		std::cout << workouts[i].getName() << "," << workouts[i].getType() << "," << workouts[i].getPrice() << std::endl;
 }
 
 std::string PrintWorkoutOptions::toString() const
@@ -110,10 +114,12 @@ std::string PrintWorkoutOptions::toString() const
 
 PrintTrainerStatus::PrintTrainerStatus(int id)
 {
+	
 }
 
 void PrintTrainerStatus::act(Studio& studio)
 {
+	
 }
 
 std::string PrintTrainerStatus::toString() const

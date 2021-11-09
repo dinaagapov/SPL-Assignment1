@@ -6,6 +6,8 @@
 #include "Workout.h"
 #include "Trainer.h"
 #include "Action.h"
+#include "Workout.h"
+#include "Customer.h"
 #include <fstream>
 
 
