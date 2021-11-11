@@ -18,13 +18,12 @@ void Trainer::addCustomer(Customer* customer)
 
 void Trainer::removeCustomer(int id)
 {
-	auto iter = customersList.begin();
-	for (; iter != customersList.end(); iter++)
-	{
-		if ((*iter)->getId() == id)
-			customersList.pop_back(*iter); // fix
-			delete *iter;
+	if (id < customersList.size()) {
+		Customer* customer = customersList[id];
+		customersList.erase(customersList.begin() + id);
+		delete customer;
 	}
+	
 }
 
 Customer* Trainer::getCustomer(int id)

@@ -20,6 +20,8 @@ public:
     Trainer* getTrainer(int tid);
     const std::vector<BaseAction*>& getActionsLog() const; // Return a reference to the history of actions
     std::vector<Workout>& getWorkoutOptions();
+    BaseAction* configureTheAction(std::string input); // takes string and return the right action
+    Customer* createCustomer(int id, std::string name, std::string type);
 
 private:
     bool open;

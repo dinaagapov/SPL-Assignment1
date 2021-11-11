@@ -30,13 +30,13 @@ std::string BaseAction::getErrorMsg() const
 
 OpenTrainer::OpenTrainer(int id, std::vector<Customer*>& customersList):trainerId(id)
 {
-
+	
 }
 
 void OpenTrainer::act(Studio& studio)
 {
 	
-		
+		studio.
 }
 
 std::string OpenTrainer::toString() const
