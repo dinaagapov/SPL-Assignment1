@@ -92,7 +92,8 @@ void Studio::start()
 		action->act(*this);
 		actionsLog.push_back(action);
 	}
-	CloseAll();
+	CloseAll* closeAll = new CloseAll();
+	closeAll->act(*this);
 	open = false;
 }
 

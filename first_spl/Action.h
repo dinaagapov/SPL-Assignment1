@@ -13,7 +13,7 @@ enum ActionStatus {
 };
 
 //Forward declaration
-class Stïëudio;
+class Studio;
 
 class BaseAction {
 public:
