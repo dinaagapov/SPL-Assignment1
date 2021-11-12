@@ -2,6 +2,7 @@
 #include<iostream>
 #include<vector> // for vectors
 #include<iterator> // for iterators
+#include <algorithm>
 
 Customer::Customer(std::string c_name, int c_id):name(c_name),id(c_id)
 {
@@ -16,6 +17,8 @@ int Customer::getId() const
 {
 	return id;
 }
+
+
 
 
 FullBodyCustomer::FullBodyCustomer(std::string name, int id) : Customer(name,id)
@@ -65,7 +68,7 @@ std::vector<int> FullBodyCustomer::order(const std::vector<Workout>& workout_opt
 
 std::string FullBodyCustomer::toString() const
 {
-	return "fbd";
+	return getName()+",fbd";;
 }
 
 HeavyMuscleCustomer::HeavyMuscleCustomer(std::string name, int id) : Customer(name, id)
@@ -74,6 +77,11 @@ HeavyMuscleCustomer::HeavyMuscleCustomer(std::string name, int id) : Customer(na
 
 std::vector<int> HeavyMuscleCustomer::order(const std::vector<Workout>& workout_options)
 {
+	// not sure it is good - I wanted to sort the vec by the price;
+	std::sort(workout_options.begin(), workout_options.end()); 
+	// reverse the vector to start from the most expensive
+	reverse(workout_options.begin(), workout_options.end());
+
 	std::vector<int> output;
 	auto iter = workout_options.begin();
 	for (; iter != workout_options.end(); iter++)
@@ -86,9 +94,11 @@ std::vector<int> HeavyMuscleCustomer::order(const std::vector<Workout>& workout_
 	return output;
 }
 
+
+
 std::string HeavyMuscleCustomer::toString() const
 {
-	return "mcl";
+	return getName()+ ",mcl";;
 }
 
 CheapCustomer::CheapCustomer(std::string name, int id) : Customer(name, id)
@@ -97,6 +107,7 @@ CheapCustomer::CheapCustomer(std::string name, int id) : Customer(name, id)
 
 std::vector<int> CheapCustomer::order(const std::vector<Workout>& workout_options)
 {
+	std::sort(workout_options.begin(), workout_options.end());
 	int minID = -1;
 	int minPrice = -1;
 	std::vector<int> output;
@@ -115,7 +126,7 @@ std::vector<int> CheapCustomer::order(const std::vector<Workout>& workout_option
 
 std::string CheapCustomer::toString() const
 {
-	return "chp";
+	return getName() + ",chp";
 }
 
 SweatyCustomer::SweatyCustomer(std::string name, int id) : Customer(name, id)
@@ -138,5 +149,5 @@ std::vector<int> SweatyCustomer::order(const std::vector<Workout>& workout_optio
 
 std::string SweatyCustomer::toString() const
 {
-	return "swt";
+	return getName() + ",swp";
 }

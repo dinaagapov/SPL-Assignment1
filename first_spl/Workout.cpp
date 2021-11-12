@@ -26,3 +26,8 @@ WorkoutType Workout::getType() const
 {
 	return type;
 }
+
+bool Workout::operator<(const Workout& other) const
+{
+	return price < other.price;
+}

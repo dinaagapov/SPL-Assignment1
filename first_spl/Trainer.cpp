@@ -18,12 +18,18 @@ void Trainer::addCustomer(Customer* customer)
 
 void Trainer::removeCustomer(int id)
 {
-	if (id < customersList.size()) {
-		Customer* customer = customersList[id];
-		customersList.erase(customersList.begin() + id);
-		delete customer;
+	if (id < customersList.size())
+	{
+		auto iter = customersList.begin();
+		for (; iter != customersList.end(); iter++)
+		{
+			if ((*iter)->getId() == id)
+			{
+				customersList.erase(iter);
+			}
+		}
+
 	}
-	
 }
 
 Customer* Trainer::getCustomer(int id)
@@ -38,16 +44,21 @@ Customer* Trainer::getCustomer(int id)
 
 std::vector<Customer*>& Trainer::getCustomers()
 {
-	// TODO: insert return statement here
+	return customersList;
 }
 
 std::vector<OrderPair>& Trainer::getOrders()
 {
-	// TODO: insert return statement here
+	return orderList;
 }
 
 void Trainer::order(const int customer_id, const std::vector<int> workout_ids, const std::vector<Workout>& workout_options)
 {
+	
+	std::vector<int> result = getCustomer(customer_id)->order(workout_options);
+	for (int i = 0; i < result.size(); i++)
+		orderList.push_back(OrderPair(customer_id, workout_options.at(result.at(i))));
+	
 }
 
 void Trainer::openTrainer()

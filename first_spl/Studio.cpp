@@ -12,16 +12,16 @@ Studio::Studio() :open(false)
 
 Studio::Studio(const std::string& configFilePath) : open(false)
 {
-	bool flag1 = false;
-	bool flag2 = false;
-	bool flag3 = false;
-	int idW = 0;
+	bool flag1 = false;  // flag1 true if we get to line # Number of trainers
+	bool flag2 = false; // flag2 true if we get to line # Traines
+	bool flag3 = false; // flag3 true if we get to line # Work Options
+	int idW;
 	int numberOfTrainers;
-	std::ifstream file(configFilePath);
-	string clean = "";
+	std::ifstream file(configFilePath); 
 	if (file.is_open())
 	{
 		std::string line;
+		int idW = 0;
 		while (getline(file, line))
 		{
 			if (!line.empty())
@@ -29,7 +29,7 @@ Studio::Studio(const std::string& configFilePath) : open(false)
 			else if (line == "# Number of trainers")
 				flag1 = true;
 			else if (flag1) {
-				numberOfTrainers = stoi(line);
+				numberOfTrainers = stoi(line); // converts to int
 				flag1 = false;
 			}
 			else if (line == "# Traines")
@@ -38,7 +38,7 @@ Studio::Studio(const std::string& configFilePath) : open(false)
 			{
 				std::vector<int> vect;
 				std::stringstream ss(line);
-				for (int i; ss >> i;)
+				for (int i; ss >> i;) // removes all the commas - ','
 				{
 					vect.push_back(i);
 					if (ss.peek() == ',')
@@ -62,8 +62,15 @@ Studio::Studio(const std::string& configFilePath) : open(false)
 					string substr;
 					getline(s_stream, substr, ',');
 					result.push_back(substr);
-					Workout workout(idW, result[0], stoi(result[2]), result[3]);
-					workout_options.push_back(workout);
+					// NEED TO CONVERT STRING TO ENUM
+					int enumType;
+					if (result[3] == "Anaerobic")
+						enumType = 1;
+					else if (result[3] == "Mixed")
+						enumType = 2;
+					else
+						enumType = 3;
+					workout_options.push_back(Workout(idW, result[0], stoi(result[2]), WorkoutType(enumType)));
 					idW = idW + 1;
 				}
 			}
@@ -81,9 +88,9 @@ void Studio::start()
 	while (input != "closeAll")
 	{
 		cin >> input;
-		configureTheAction(input)->act(*this);
-		
-
+		BaseAction* action = configureTheAction(input);
+		action->act(*this);
+		actionsLog.push_back(action);
 	}
 	CloseAll();
 	open = false;
@@ -92,7 +99,7 @@ void Studio::start()
 
 int Studio::getNumOfTrainers() const
 {
-	return trainers.size(); // fix
+	return trainers.size();
 }
 
 Trainer* Studio::getTrainer(int tid)
@@ -105,7 +112,7 @@ Trainer* Studio::getTrainer(int tid)
 }
 const std::vector<BaseAction*>& Studio::getActionsLog() const
 {
-	return actionsLog;
+	return actionsLog; 
 }
 
 std::vector<Workout>& Studio::getWorkoutOptions()
@@ -121,10 +128,10 @@ BaseAction* Studio::configureTheAction(std::string input)
 	{
 		string numOfTrainerString = input.substr(6, 1);
 		int numOfTrainer = stoi(numOfTrainerString);
-		string costumers = input.substr(8);
+		string costumers = input.substr(7);
 		vector<string> result;
 		stringstream s_stream(costumers);
-		while (s_stream.good())
+		while (s_stream.good()) // seperate the line to <name1>,<strategy1>
 		{
 			string substr;
 			getline(s_stream, substr, ' ');
@@ -134,6 +141,7 @@ BaseAction* Studio::configureTheAction(std::string input)
 		string type = "";
 		bool findComma = false;
 		std::vector<Customer*> customerList;
+		// here we want to find the index of the comma in <name1>,<strategy1>
 			for (int i = 0; i < result.size() && !findComma; i++)
 			{
 				int indexComma = 0;
@@ -144,7 +152,7 @@ BaseAction* Studio::configureTheAction(std::string input)
 					{
 						findComma = true;
 						string name = result[i].substr(0, indexComma);
-						string type = result[i].substr(indexComma + 1, result[i].size() - (indexComma + 1));
+						string type = result[i].substr(indexComma + 1);
 						Customer* customer = createCustomer(id, name, type);
 						customerList.push_back(customer);
 					}
@@ -156,21 +164,19 @@ BaseAction* Studio::configureTheAction(std::string input)
 			}
 
 			OpenTrainer* openTrainer = new OpenTrainer(numOfTrainer, customerList);
-			openTrainer->act(*this);
-			actionsLog.push_back(openTrainer);
+			return openTrainer;
 	}
 
 	else if (input.substr(0, 5) == "order")
 	{
-		string numOfTrainerString = input.substr(6, 1);
+		string numOfTrainerString = input.substr(7, 1);
 		int numOfTrainer = stoi(numOfTrainerString);
 		Order* order = new Order(numOfTrainer);
-		order->act(*this);
-		actionsLog.push_back(order);
+		return order;
 
 	}
 
-	else if (input.substr(0, 13) == "move customer")
+	else if (input.substr(0, 4) == "move")
 	{
 		string numOfTrainerOriginString = input.substr(5, 1);
 		string numOfTrainerDesString = input.substr(7, 1);
@@ -181,8 +187,7 @@ BaseAction* Studio::configureTheAction(std::string input)
 
 		MoveCustomer* moveCustomer = new MoveCustomer(numOfTrainerOrigin,
 			numOfTrainerDes, numOfTrainerCustomer);
-		moveCustomer->act(*this);
-		actionsLog.push_back(moveCustomer);
+		return moveCustomer;
 
 	}
 
@@ -191,35 +196,36 @@ BaseAction* Studio::configureTheAction(std::string input)
 		string numOfTrainerString = input.substr(6, 1);
 		int numOfTrainer = stoi(numOfTrainerString);
 		Close* close = new Close(numOfTrainer);
-		close->act(*this);
-		actionsLog.push_back(close);
+		return close;
 	}
-	else if (input.substr(0, 16) == "print Trainer Status")
+	else if (input.substr(0, 6) == "status")
 	{
-		string numOfTrainerString = input.substr(8, 1);
+		string numOfTrainerString = input.substr(7, 1);
 		int numOfTrainer = stoi(numOfTrainerString);
-		PrintTrainerStatus* printTrainerStatus = new PrintTrainerStatus();
-		printTrainerStatus->act(*this);
-		actionsLog.push_back(printTrainerStatus);
+		PrintTrainerStatus* printTrainerStatus = new PrintTrainerStatus(numOfTrainer);
+		return printTrainerStatus;
 	}
 
-	else if (input.substr(0, 15) == "print workout options")
+	else if (input.substr(0, 15) == "workout_options")
 	{
-		string numOfTrainerString = input.substr(15, 1);
-		int numOfTrainer = stoi(numOfTrainerString);
+	
 		PrintWorkoutOptions* printWorkOutOptions = new PrintWorkoutOptions();
-		printWorkOutOptions->act(*this);
-		actionsLog.push_back(printWorkOutOptions);
+		return printWorkOutOptions;
 	}
-	else if (input.substr(0, 7) == "backup")
+	else if (input.substr(0, 3) == "log")
 	{
-
-		//not implemented
+		PrintActionsLog* printActionsLog = new PrintActionsLog();
+		return printActionsLog;
 	}
-	else if (input.substr(0, 8) == "restore")
+	else if (input.substr(0, 6) == "backup")
 	{
-	//not implemented
-
+		BackupStudio* backup = new BackupStudio();
+		return backup;
+	}
+	else if (input.substr(0, 7) == "restore") {
+		RestoreStudio* restore = new RestoreStudio();
+		return restore;
+	
 	}
 }
 
